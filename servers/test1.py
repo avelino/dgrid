@@ -13,6 +13,7 @@
 from fabric.api import env
 
 def __init__():
+    env.user = 'test1'
     env.user = 'root'
     env.password = 'lerolero'
     env.hosts = ['10.0.0.3']

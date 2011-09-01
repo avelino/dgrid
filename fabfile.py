@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+#
 """
     fabfile
 
@@ -64,18 +65,23 @@ def deploy(path):
             env.user,
             _date),
             "~/dgrid_bkp-%s-%s.tar.gz" % (env.user, _date))
-        rm("%sdgrid_bkp*" % env.folder)
+
+        _folder_deploy = "%s../%s_deploy/" % (env.folder, env.name)
+        test = run("mkdir %s" % _folder_deploy)
+        rm("%s*" % _folder_deploy)
 
         # send tar local for remote
-        put("~/dgrid_deploy-%s.tar.gz" % env.user, env.folder)
+        put("~/dgrid_deploy-%s.tar.gz" % env.user, _folder_deploy)
 
         # open tar remote and remove tar remote
-        _rfile = "%sdgrid_deploy-%s.tar.gz" % (env.folder, env.user)
-        _rtar = "tar zxf %s" % _rfile
-        run("%s && %s" % (_ropen, _rtar))
-        rm("%s" % _rfile)
+        _rfile = "%sdgrid_deploy-%s.tar.gz" % (_folder_deploy, env.user)
+        _rtar = "tar -xf %s" % _rfile
+        _ropen_folder_deploy = "cd %s" % _folder_deploy
+        run("%s && %s" % (_ropen_folder_deploy, _rtar))
+
+        rm("%s/*" % env.folder)
+        run("mv %s* %s" % (_folder_deploy, env.folder))
 
         # remove tar local
         rm("~/dgrid_deploy-%s.tar.gz" % env.user, True)
-
-
+        rm(_folder_deploy)
