@@ -79,7 +79,7 @@ def deploy(path):
         _ropen_folder_deploy = "cd %s" % _folder_deploy
         run("%s && %s" % (_ropen_folder_deploy, _rtar))
 
-        rm("%s/*" % env.folder)
+        rm("%s*" % env.folder)
         run("mv %s* %s" % (_folder_deploy, env.folder))
 
         # remove tar local
